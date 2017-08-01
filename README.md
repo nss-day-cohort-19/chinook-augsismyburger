@@ -1,18 +1,116 @@
 # chinook-augsismyburger
-Chinook Exercises
+Chinook Exercises:
 
+non_usa_customers.sql: Provide a query showing Customers (just their full names, customer ID and country) who are not in the US.
 1.
 `select c.firstname, c.lastname, c.customerID, c.Country
 from customer c
 where c.Country != "USA";`
 
+brazil_customers.sql: Provide a query only showing the Customers from Brazil.
 2.
 `select c.firstname, c.lastname, c.customerID, c.Country
 from customer c
 where c.Country == "Brazil";`
 
+brazil_customers_invoices.sql: Provide a query showing the Invoices of customers who are from Brazil. The resultant table should show the customer's full name, Invoice ID, Date of the invoice and billing country.
 3.
 `select c.firstname, c.lastname, i.InvoiceId, i.InvoiceDate, i.billingCountry
 from Customer c
 left join Invoice i on c.CustomerId == i.CustomerId
 where c.Country == "Brazil";`
+
+sales_agents.sql: Provide a query showing only the Employees who are Sales Agents.
+4.
+`select e.FirstName, e.LastName, e.employeeID
+from Employee e
+where e.Title == "Sales Support Agent";`
+
+unique_invoice_countries.sql: Provide a query showing a unique/distinct list of billing countries from the Invoice table.
+5.
+`select distinct i.billingCountry
+from invoice i;`
+
+sales_agent_invoices.sql: Provide a query that shows the invoices associated with each sales agent. The resultant table should include the Sales Agent's full name.
+6.
+`select i.invoiceID, i.Total, e.FirstName || " " || e.LastName as "Sales Agent Name"
+from Invoice i, Employee e, Customer c
+where i.CustomerId == c.SupportRepId
+and c.SupportRepId == e.EmployeeId;`
+
+invoice_totals.sql: Provide a query that shows the Invoice Total, Customer name, Country and Sale Agent name for all invoices and customers.
+7.
+`select SUBSTR(i.InvoiceDate, 0, 5) as "Year", Count(i.InvoiceId) as "# of Invoices"
+from Invoice i
+where i.InvoiceDate LIKE "2009%"
+OR i.InvoiceDate LIKE "2011%"
+GROUP BY SUBSTR(i.InvoiceDate, 0, 5);`
+
+total_invoices_{year}.sql: How many Invoices were there in 2009 and 2011?
+8.
+`select SUBSTR(i.InvoiceDate, 0, 5) as "Year", Sum(i.Total) as "Total Sales"
+from Invoice i
+where i.InvoiceDate LIKE "2009%"
+OR i.InvoiceDate LIKE "2011%"
+GROUP BY SUBSTR(i.InvoiceDate, 0, 5);`
+
+total_sales_{year}.sql: What are the respective total sales for each of those years?
+9.
+`select Count(il.InvoiceId) as "Number of Line Items of Invoice 37"
+from InvoiceLine il
+where il.InvoiceId == 37;`
+
+invoice_37_line_item_count.sql: Looking at the InvoiceLine table, provide a query that COUNTs the number of line items for Invoice ID 37
+10.
+
+line_items_per_invoice.sql: Looking at the InvoiceLine table, provide a query that COUNTs the number of line items for each Invoice. HINT: GROUP BY
+11.
+
+line_item_track.sql: Provide a query that includes the purchased track name with each invoice line item.
+12.
+
+line_item_track_artist.sql: Provide a query that includes the purchased track name AND artist name with each invoice line item.
+13.
+
+country_invoices.sql: Provide a query that shows the # of invoices per country. HINT: GROUP BY
+14.
+
+playlists_track_count.sql: Provide a query that shows the total number of tracks in each playlist. The Playlist name should be include on the resulant table.
+15.
+
+tracks_no_id.sql: Provide a query that shows all the Tracks, but displays no IDs. The result should include the Album name, Media type and Genre.
+16.
+
+invoices_line_item_count.sql: Provide a query that shows all Invoices but includes the # of invoice line items.
+17.
+
+sales_agent_total_sales.sql: Provide a query that shows total sales made by each sales agent.
+18.
+
+top_2009_agent.sql: Which sales agent made the most in sales in 2009?
+19.
+
+Hint: Use the MAX function on a subquery.
+top_agent.sql: Which sales agent made the most in sales over all?
+20.
+
+sales_agent_customer_count.sql: Provide a query that shows the count of customers assigned to each sales agent.
+21.
+
+sales_per_country.sql: Provide a query that shows the total sales per country.
+22.
+
+top_country.sql: Which country's customers spent the most?
+23.
+
+top_2013_track.sql: Provide a query that shows the most purchased track of 2013.
+24.
+
+top_5_tracks.sql: Provide a query that shows the top 5 most purchased tracks over all.
+25.
+
+top_3_artists.sql: Provide a query that shows the top 3 best selling artists.
+26.
+
+top_media_type.sql: Provide a query that shows the most purchased Media Type.
+27.
