@@ -130,35 +130,84 @@ GROUP By e.FirstName;`
 
 top_2009_agent.sql: Which sales agent made the most in sales in 2009?
 19.
-`SELECT MAX(total_sales) as "Total Sales", e.FirstName || " " || e.LastName as "Sales Rep"
-FROM (SELECT SUM(i.Total) as total_sales
-		  FROM Employee e, Customer c, Invoice i
-		    Where e.EmployeeId == c.SupportRepId
-		    AND c.CustomerId == i.CustomerId
-		    And i.InvoiceDate LIKE "%2009%"
-		    GROUP BY e.FirstName), Employee e;`
+`SELECT e.FirstName || " " || e.LastName as "Sales Rep", SUM(i.Total) as "Total Sales"
+FROM Employee e, Customer c, Invoice i
+Where e.EmployeeId == c.SupportRepId
+AND c.CustomerId == i.CustomerId
+AND i.InvoiceDate LIKE "2009%"
+Group BY e.FirstName || " " || e.LastName
+ORDER BY SUM(i.Total) DESC
+LIMIT 1;`
 
 Hint: Use the MAX function on a subquery.
 top_agent.sql: Which sales agent made the most in sales over all?
 20.
+`SELECT e.FirstName || " " || e.LastName as "Sales Rep", SUM(i.Total) as "Total Sales"
+FROM Employee e, Customer c, Invoice i
+Where e.EmployeeId == c.SupportRepId
+AND c.CustomerId == i.CustomerId
+Group BY e.FirstName || " " || e.LastName
+ORDER BY SUM(i.Total) DESC
+LIMIT 1;`
 
 sales_agent_customer_count.sql: Provide a query that shows the count of customers assigned to each sales agent.
 21.
+`SELECT e.FirstName || " " || e.LastName as "Sales Rep", COUNT(c.SupportRepId) as "Num of Customers"
+FROM Employee e, Customer c
+Where c.SupportRepId == e.EmployeeId
+GROUP BY e.FirstName || " " || e.LastName;`
 
 sales_per_country.sql: Provide a query that shows the total sales per country.
 22.
+`SELECT distinct i.BillingCountry, COUNT(i.InvoiceID) as "Number of Sales"
+FROM Invoice i
+GROUP BY i.BillingCountry;`
 
 top_country.sql: Which country's customers spent the most?
 23.
+`SELECT distinct i.BillingCountry, SUM(i.Total) as "Total Sales"
+FROM Invoice i
+GROUP BY i.BillingCountry
+ORDER BY SUM(i.Total) DESC
+LIMIT 1;`
 
 top_2013_track.sql: Provide a query that shows the most purchased track of 2013.
 24.
+`SELECT t.Name, COUNT(il.InvoiceLineId)
+FROM Track t, InvoiceLine il, Invoice i
+WHERE t.TrackId == il.TrackId
+AND il.InvoiceId == i.InvoiceId
+AND i.InvoiceDate LIKE "2013%"
+GROUP BY t.Name
+ORDER BY COUNT(il.InvoiceLineId) DESC
+Limit 1;`
 
 top_5_tracks.sql: Provide a query that shows the top 5 most purchased tracks over all.
 25.
+`SELECT t.Name, COUNT(il.InvoiceLineId)
+FROM Track t, InvoiceLine il
+WHERE t.TrackId == il.TrackId
+GROUP BY t.Name
+ORDER BY COUNT(il.InvoiceLineId) DESC
+Limit 5;`
 
 top_3_artists.sql: Provide a query that shows the top 3 best selling artists.
 26.
+`SELECT ar.Name, COUNT(il.TrackId)
+FROM Artist ar, Album al, Track t, InvoiceLine il
+Where ar.ArtistId == al.ArtistId
+AND al.AlbumId == t.AlbumId
+AND t.TrackId == il.TrackId
+GROUP BY ar.Name
+ORDER BY COUNT(il.TrackId) DESC
+LIMIT 3;`
 
 top_media_type.sql: Provide a query that shows the most purchased Media Type.
 27.
+`SELECT mt.Name, COUNT(il.TrackId)
+FROM MediaType mt, Track t, InvoiceLine il
+WHERE mt.MediaTypeId == t.MediaTypeId
+AND t.TrackId == il.TrackId
+Group BY mt.Name
+ORDER BY COUNT(il.TrackId) DESC
+LIMIT 1;`
