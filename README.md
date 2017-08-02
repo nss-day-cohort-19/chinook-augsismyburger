@@ -35,7 +35,7 @@ sales_agent_invoices.sql: Provide a query that shows the invoices associated wit
 6.
 `select i.invoiceID, i.Total, e.FirstName || " " || e.LastName as "Sales Agent Name"
 from Invoice i, Employee e, Customer c
-where i.CustomerId == c.SupportRepId
+where i.CustomerId == c.CustomerId
 and c.SupportRepId == e.EmployeeId;`
 
 invoice_totals.sql: Provide a query that shows the Invoice Total, Customer name, Country and Sale Agent name for all invoices and customers.
@@ -101,16 +101,16 @@ playlists_track_count.sql: Provide a query that shows the total number of tracks
 `SELECT p.Name as "Playlist Name", Count(pt.TrackId) as "Number of Tracks"
 FROM Playlist p, PlaylistTrack pt
 WHERE p.PlayListId == pt.PlayListId
-GROUP BY p.Name;`
+GROUP BY p.PLaylistId;`
 
 tracks_no_id.sql: Provide a query that shows all the Tracks, but displays no IDs. The result should include the Album name, Media type and Genre.
 16.
-`SELECT  a.Title as "Album Title", mt.Name as "Media Type", g.Name as "Genre"
+`SELECT  t.Name, a.Title as "Album Title", mt.Name as "Media Type", g.Name as "Genre"
 FROM Track t, Album a, MediaType mt, Genre g
 Where t.AlbumId == a.AlbumId
 AND t.MediaTypeId == mt.MediaTypeId
-AND t.GenreId == g.GenreId;
-`
+AND t.GenreId == g.GenreId;`
+
 
 invoices_line_item_count.sql: Provide a query that shows all Invoices but includes the # of invoice line items.
 17.
@@ -138,6 +138,13 @@ AND i.InvoiceDate LIKE "2009%"
 Group BY e.FirstName || " " || e.LastName
 ORDER BY SUM(i.Total) DESC
 LIMIT 1;`
+`select max(Total.Sales) as "Sales", Total.LastName
+from( select e.FirstName, e.LastName, i.invoiceDate, Sum(i.Total) as "Sales"
+	from Invoice i, Employee e, Customer c
+	where e.EmployeeId == c.SupportRepId
+	and i.InvoiceDate Like "2009%"
+	and c.CustomerId == i.CustomerId
+	group by e.LastName) as Total;`
 
 Hint: Use the MAX function on a subquery.
 top_agent.sql: Which sales agent made the most in sales over all?
